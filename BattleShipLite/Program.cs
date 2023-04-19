@@ -160,8 +160,13 @@ namespace BattleShipLite
 
         private static string AskForUsersName()
         {
-            Console.Write("What is your name? ");
-            string output = Console.ReadLine();
+            string output = string.Empty;
+
+            do
+            {
+                Console.Write("What is your name? ");
+                output = Console.ReadLine();
+            } while (output == string.Empty);
 
             return output;
         }
