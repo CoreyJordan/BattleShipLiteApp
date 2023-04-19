@@ -75,18 +75,10 @@ namespace BattleShipLiteLibrary
 
         public static bool PlaceShip(PlayerInfoModel model, string location)
         {
-            bool isValid = true;
             (string row, int column) = SplitShotIntoRowAndColumn(location);
+            bool isValid = ValidateGridLocation(row, column);
 
-            if (row[0] < 65 || row[0] > 69)
-            {
-                isValid = false;
-            }
-            else if (column < 1 || column > 5)
-            {
-                isValid = false;
-            }
-            else
+            if (isValid)
             {
                 foreach (GridSpotModel gridSpot in model.ShipLocations)
                 {
@@ -100,8 +92,25 @@ namespace BattleShipLiteLibrary
 
             if (isValid)
             {
-                GridSpotModel shipSpot = new GridSpotModel() { SpotLetter = row, SpotNumber = column };
+                GridSpotModel shipSpot = new GridSpotModel() 
+                {
+                    SpotLetter = row, SpotNumber = column, Status = GridSpotStatus.Ship
+                };
                 model.ShipLocations.Add(shipSpot);
+            }
+            return isValid;
+        }
+
+        private static bool ValidateGridLocation(PlayerInfoModel model, string row, int column)
+        {
+            bool isValid = false;
+
+            foreach (GridSpotModel spot in model.ShotGrid)
+            {
+                if (spot.SpotLetter == row && spot.SpotNumber == column)
+                {
+                    isValid = true;
+                }
             }
             return isValid;
         }
@@ -109,9 +118,9 @@ namespace BattleShipLiteLibrary
         public static bool PlayerStillActive(PlayerInfoModel nonActivePlayer)
         {
             bool stillHasShips = false;
-            foreach (GridSpotModel spot in nonActivePlayer.ShipLocations)
+            foreach (GridSpotModel ship in nonActivePlayer.ShipLocations)
             {
-                if (spot.Status != GridSpotStatus.Sunk)
+                if (ship.Status != GridSpotStatus.Sunk)
                 {
                     stillHasShips = true;
                     break;
@@ -149,17 +158,9 @@ namespace BattleShipLiteLibrary
 
         public static bool ValidateShot(string row, int column, PlayerInfoModel activePlayer)
         {
-            bool isValid = true;
+            bool isValid = ValidateGridLocation(row, column);
 
-            if (row[0] < 65 || row[0] > 69)
-            {
-                isValid = false;
-            }
-            else if (column < 1 || column > 5)
-            {
-                isValid = false;
-            }
-            else
+            if (isValid)
             {
                 foreach (GridSpotModel gridSpot in activePlayer.ShotGrid)
                 {
