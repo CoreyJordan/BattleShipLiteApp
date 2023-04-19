@@ -76,7 +76,7 @@ namespace BattleShipLiteLibrary
         public static bool PlaceShip(PlayerInfoModel model, string location)
         {
             (string row, int column) = SplitShotIntoRowAndColumn(location);
-            bool isValid = ValidateGridLocation(row, column);
+            bool isValid = ValidateGridLocation(model, row, column);
 
             if (isValid)
             {
@@ -158,7 +158,7 @@ namespace BattleShipLiteLibrary
 
         public static bool ValidateShot(string row, int column, PlayerInfoModel activePlayer)
         {
-            bool isValid = ValidateGridLocation(row, column);
+            bool isValid = ValidateGridLocation(activePlayer, row, column);
 
             if (isValid)
             {
