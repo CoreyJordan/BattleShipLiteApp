@@ -64,7 +64,8 @@ namespace BattleShipLite
 
                 if (!isValidShot)
                 {
-                    Console.WriteLine("Invalid shot location. Please try again.");
+                    HighlightText(ConsoleColor.Red, "Invalid shot location. Please try again.");
+                    Console.WriteLine();
                 }
 
             } while (!isValidShot);
@@ -72,29 +73,47 @@ namespace BattleShipLite
             bool isAHit = GameLogic.IdentifyShotResult(nonActivePlayer, row, column);
 
             GameLogic.MarkShotResult(activePlayer, row, column, isAHit);
+
             GameLogic.UpdateShipCount(nonActivePlayer, row, column);
+
             DisplayShotResult(row, column, isAHit);
+
+            Console.WriteLine();
+            Console.Write("Hit enter to continue...");
+            Console.ReadLine();
             Console.Clear();
         }
 
         private static void DisplayShotResult(string row, int column, bool isAHit)
         {
+            
+
             if (isAHit)
             {
-                Console.WriteLine($"{row}{column} is a direct hit!");
+                Console.Write($"{row}{column} is a direct ");
+                HighlightText(ConsoleColor.Green, "HIT");
+                Console.WriteLine("!");
             }
             else
             {
-                Console.WriteLine($"{row}{column} is a miss.");
+                Console.Write($"{row}{column} is a ");
+                HighlightText(ConsoleColor.Red, "MISS");
+                Console.WriteLine("!");
             }
-            Console.Write("Hit enter to continue...");
-            Console.ReadLine();
+        }
+
+        private static void HighlightText(ConsoleColor temp, string result)
+        {
+            Console.ForegroundColor = temp;
+            Console.Write(result);
+            Console.ResetColor();
         }
 
         private static string AskForShot(PlayerInfoModel player)
         {
-            Console.WriteLine($"{player.UsersName}, Please enter your shot.");
+            Console.Write($"{player.UsersName}, Please enter your shot: ");
             string output = Console.ReadLine();
+            Console.WriteLine();
             return output;
         }
 
@@ -115,18 +134,19 @@ namespace BattleShipLite
                     Console.Write($" {gridSpot.SpotLetter}{gridSpot.SpotNumber}");
                 }
                 else if (gridSpot.Status == GridSpotStatus.Hit)
-                {
-                    Console.Write(" X ");
+                { 
+                    HighlightText(ConsoleColor.Green, " X ");
                 }
                 else if (gridSpot.Status == GridSpotStatus.Miss)
                 {
-                    Console.Write(" O ");
+                    HighlightText(ConsoleColor.Red, " O ");
                 }
                 else
                 {
                     Console.Write(" ? ");
                 }
             }
+            Console.WriteLine();
             Console.WriteLine();
         }
 
@@ -160,7 +180,7 @@ namespace BattleShipLite
 
         private static string AskForUsersName()
         {
-            string output = string.Empty;
+            string output;
 
             do
             {
@@ -182,7 +202,8 @@ namespace BattleShipLite
 
                 if (!isValidLocation)
                 {
-                    Console.WriteLine("That was not a valid location. Please try again.");
+                    HighlightText(ConsoleColor.Red, "That was not a valid location. ");
+                    Console.WriteLine("Please try again.");
                 }
 
             } while (model.ShipLocations.Count < 5);
